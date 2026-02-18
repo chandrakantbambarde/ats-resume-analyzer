@@ -27,7 +27,7 @@ public class ResumeController {
             return ResponseEntity.badRequest().build();
         }
         
-        // ✅ Fixed: Passing 3 parameters
+        //Passing 3 parameters
         AnalysisResponse response = analysisService.analyzeResume(file, jobDescription, userId);
         return ResponseEntity.ok(response);
     }

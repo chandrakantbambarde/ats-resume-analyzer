@@ -28,11 +28,11 @@ public class AnalysisService {
             System.out.println("🤖 Calling Gemini AI...");
             AnalysisResponse response = geminiAIService.analyzeResume(resumeText, jobDescription);
 
-            // ✅ Extra info set करा
+            //Extra info set
             response.setFileName(file.getOriginalFilename());
             response.setAnalyzedAt(new Date().toString());
 
-            System.out.println("✅ Analysis complete - Score: " + response.getAtsScore());
+            System.out.println("Analysis complete - Score: " + response.getAtsScore());
             return response;
 
         } catch (Exception e) {

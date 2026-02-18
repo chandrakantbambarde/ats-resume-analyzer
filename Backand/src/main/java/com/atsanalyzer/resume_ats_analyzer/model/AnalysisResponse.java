@@ -10,11 +10,11 @@ public class AnalysisResponse {
     private String formatIssues;
     private String overallRecommendation;
 
-    // ✅ AnalysisService साठी
+    //AnalysisService 
     private String fileName;
     private String analyzedAt;
 
-    // ✅ नवीन fields
+    // New fields
     private List<String> strongMatches;
     private int skillsScore;
     private int experienceScore;

@@ -9,19 +9,19 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #09090f;  /* ✅ Dark background */
+  background-color: #09090f; 
   width: 100%;
-  overflow-x: hidden;          /* ✅ Side cut fix */
+  overflow-x: hidden;          /* Side cut fix */
 }
 
 .main-content {
   flex: 1;
-  padding: 0;                  /* ✅ padding काढला - cut होत होता */
+  padding: 0;                  /*padding काढला - cut होत होता */
   width: 100%;
 }
 
 .app-footer {
-  background-color: #09090f;  /* ✅ Dark footer */
+  background-color: #09090f;   
   border-top: 1px solid #1e2030;
   color: #64748b;
   text-align: center;

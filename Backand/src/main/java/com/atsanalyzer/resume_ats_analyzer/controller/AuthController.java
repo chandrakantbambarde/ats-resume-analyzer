@@ -12,7 +12,7 @@ public class AuthController {
     
     @GetMapping("/test")
     public String test() {
-        return "✅ Auth API is working!";
+        return "Auth API is working!";
     }
     
     @PostMapping("/register")

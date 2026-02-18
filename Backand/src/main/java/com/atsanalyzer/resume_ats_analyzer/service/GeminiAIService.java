@@ -22,7 +22,7 @@ public class GeminiAIService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public AnalysisResponse analyzeResume(String resumeText, String jobDescription) {
-        System.out.println("🔵 ===== GEMINI AI SERVICE CALLED =====");
+        System.out.println("===== GEMINI AI SERVICE CALLED =====");
         System.out.println("📝 Resume Length: " + resumeText.length());
         System.out.println("📋 JD Length: " + jobDescription.length());
 
