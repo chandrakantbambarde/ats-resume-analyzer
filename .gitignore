@@ -1,0 +1,77 @@
+# ===== BACKEND (Spring Boot / Maven) =====
+Backand/target/
+Backand/.mvn/
+Backand/mvnw
+Backand/mvnw.cmd
+
+# Class files
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs
+*.log
+logs/
+
+# IDE Files
+.idea/
+*.iml
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Application properties (contains API keys)
+**/application.properties
+**/application-*.properties
+!**/application.properties.example
+
+# ===== FRONTEND (Angular / Node) =====
+resume-ats-frontend/node_modules/
+resume-ats-frontend/dist/
+resume-ats-frontend/.angular/
+resume-ats-frontend/tmp/
+
+# Environment files
+resume-ats-frontend/.env
+resume-ats-frontend/.env.local
+resume-ats-frontend/src/environments/environment.prod.ts
+
+# Build outputs
+*.js.map
+*.ngfactory.ts
+*.ngstyle.ts
+
+# Package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Testing
+coverage/
+.nyc_output/
+
+# ===== SENSITIVE DATA =====
+# Never commit API keys!
+*.key
+*.pem
+.env
+secrets/
+
+# Database
+*.db
+*.sqlite
+*.sql
+
+# ===== MISC =====
+temp/
+*.tmp
+*.bak
+*.swp
+*~

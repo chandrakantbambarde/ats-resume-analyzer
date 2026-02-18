@@ -1,0 +1,206 @@
+<div class="page-wrapper">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- ===== UPLOAD SCREEN ===== -->
+  <div class="upload-screen" *ngIf="!loading && !result">
+    <div class="brand-header">
+      <div class="brand-icon">⚡</div>
+      <h1 class="brand-title">ATS<span class="accent">Scan</span></h1>
+      <p class="brand-sub">AI-Powered Resume Intelligence</p>
+    </div>
+
+    <div class="upload-card">
+      <div class="drop-zone" [class.has-file]="selectedFile"
+           (click)="fileInput.click()"
+           (dragover)="$event.preventDefault()"
+           (drop)="onDrop($event)">
+        <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept=".pdf">
+        <div class="drop-content" *ngIf="!selectedFile">
+          <div class="drop-icon-wrap">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="12" y1="18" x2="12" y2="12"/>
+              <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+          </div>
+          <p class="drop-main">Drop your resume here</p>
+          <p class="drop-sub">or click to browse · PDF only</p>
+        </div>
+        <div class="file-selected" *ngIf="selectedFile">
+          <div class="file-icon">📄</div>
+          <div class="file-info">
+            <span class="file-name">{{ selectedFile.name }}</span>
+            <span class="file-ready">Ready to analyze ✓</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="jd-section">
+        <label class="jd-label"><span>🎯</span> Job Description</label>
+        <textarea class="jd-textarea" [(ngModel)]="jobDescription" rows="6"
+          placeholder="Paste the job description here..."></textarea>
+        <div class="char-count">{{ jobDescription.length }} characters</div>
+      </div>
+
+      <button class="analyze-btn" (click)="analyzeResume()"
+        [disabled]="!selectedFile || !jobDescription"
+        [class.ready]="selectedFile && jobDescription">
+        <span class="btn-text">Analyze Resume</span>
+        <span class="btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== LOADING SCREEN ===== -->
+  <div class="loading-screen" *ngIf="loading">
+    <div class="loading-card">
+      <div class="ai-brain">
+        <div class="brain-ring ring-1"></div>
+        <div class="brain-ring ring-2"></div>
+        <div class="brain-ring ring-3"></div>
+        <span class="brain-icon">🤖</span>
+      </div>
+      <h2 class="loading-title">Analyzing Your Resume</h2>
+      <div class="loading-steps">
+        <div class="step" [class.active]="loadStep >= 1">
+          <span class="step-dot"></span><span>Extracting text from PDF</span>
+        </div>
+        <div class="step" [class.active]="loadStep >= 2">
+          <span class="step-dot"></span><span>Matching keywords with JD</span>
+        </div>
+        <div class="step" [class.active]="loadStep >= 3">
+          <span class="step-dot"></span><span>Calculating ATS score</span>
+        </div>
+        <div class="step" [class.active]="loadStep >= 4">
+          <span class="step-dot"></span><span>Generating suggestions</span>
+        </div>
+      </div>
+      <div class="loading-bar-wrap">
+        <div class="loading-bar" [style.width.%]="loadProgress"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RESULTS DASHBOARD ===== -->
+  <div class="results-screen" *ngIf="!loading && result" id="results-section">
+    <div class="results-topbar">
+      <button class="back-btn" (click)="resetForm()">← New Analysis</button>
+      <h2 class="results-title">Analysis Report</h2>
+      <div class="topbar-right">
+        <button class="pdf-btn" (click)="downloadPDF()">📄 Download PDF</button>
+        <span class="results-badge">AI Generated</span>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+
+      <!-- Score Card -->
+      <div class="card score-card">
+        <p class="card-label">ATS Score</p>
+        <div class="score-donut-wrap">
+          <svg class="score-svg" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#1e293b" stroke-width="10"/>
+            <circle cx="60" cy="60" r="50" fill="none"
+              [attr.stroke]="getScoreColor(result?.atsScore)"
+              stroke-width="10" stroke-linecap="round"
+              stroke-dasharray="314"
+              [attr.stroke-dashoffset]="getStrokeDashOffset(animatedScore)"
+              class="score-arc" transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="score-center">
+            <span class="score-number" [style.color]="getScoreColor(result?.atsScore)">{{ animatedScore }}%</span>
+            <span class="score-grade">{{ getGrade(result?.atsScore) }}</span>
+          </div>
+        </div>
+        <p class="score-msg" [style.color]="getScoreColor(result?.atsScore)">
+          {{ getScoreMessage(result?.atsScore) }}
+        </p>
+      </div>
+
+      <!-- Section Scores Card -->
+      <div class="card section-scores-card">
+        <p class="card-label">📊 Section-wise Score</p>
+        <div class="section-score">
+          <div class="section-row">
+            <span class="section-name">💼 Skills</span>
+            <div class="section-bar-wrap">
+              <div class="section-bar" [style.width.%]="result?.skillsScore || 0"
+                   [style.background]="getScoreColor(result?.skillsScore)"></div>
+            </div>
+            <span class="section-pct" [style.color]="getScoreColor(result?.skillsScore)">
+              {{ result?.skillsScore || 0 }}%
+            </span>
+          </div>
+          <div class="section-row">
+            <span class="section-name">📋 Experience</span>
+            <div class="section-bar-wrap">
+              <div class="section-bar" [style.width.%]="result?.experienceScore || 0"
+                   [style.background]="getScoreColor(result?.experienceScore)"></div>
+            </div>
+            <span class="section-pct" [style.color]="getScoreColor(result?.experienceScore)">
+              {{ result?.experienceScore || 0 }}%
+            </span>
+          </div>
+          <div class="section-row">
+            <span class="section-name">🎓 Education</span>
+            <div class="section-bar-wrap">
+              <div class="section-bar" [style.width.%]="result?.educationScore || 0"
+                   [style.background]="getScoreColor(result?.educationScore)"></div>
+            </div>
+            <span class="section-pct" [style.color]="getScoreColor(result?.educationScore)">
+              {{ result?.educationScore || 0 }}%
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommendation Card -->
+      <div class="card recommendation-card">
+        <p class="card-label">🎯 Overall Recommendation</p>
+        <p class="recommendation-text">{{ result?.overallRecommendation }}</p>
+      </div>
+
+      <!-- Strong Matches Card -->
+      <div class="card matches-card" *ngIf="result?.strongMatches?.length > 0">
+        <p class="card-label">💪 Strong Matches</p>
+        <div class="keywords-wrap">
+          <span class="match-chip" *ngFor="let m of result.strongMatches">✓ {{ m }}</span>
+        </div>
+      </div>
+
+      <!-- Missing Keywords Card -->
+      <div class="card keywords-card">
+        <p class="card-label">📌 Missing Keywords</p>
+        <div class="keywords-wrap">
+          <ng-container *ngIf="result?.missingKeywords">
+            <span class="keyword-chip" *ngFor="let kw of splitKeywords(result?.missingKeywords)">{{ kw }}</span>
+          </ng-container>
+          <span class="no-missing" *ngIf="!result?.missingKeywords">✅ No missing keywords!</span>
+        </div>
+      </div>
+
+      <!-- Suggestions Card -->
+      <div class="card suggestions-card" *ngIf="result?.suggestions?.length > 0">
+        <p class="card-label">💡 Role-specific Suggestions</p>
+        <ul class="suggestions-list">
+          <li *ngFor="let s of result.suggestions; let i = index">
+            <span class="sug-num">{{ i + 1 }}</span><span>{{ s }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Format Issues Card -->
+      <div class="card format-card" *ngIf="result?.formatIssues">
+        <p class="card-label">⚠️ Format Issues</p>
+        <p class="format-text">{{ result.formatIssues }}</p>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <button class="new-btn" (click)="resetForm()">🔄 Analyze Another Resume</button>
+    </div>
+  </div>
+</div>

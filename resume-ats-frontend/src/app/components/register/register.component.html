@@ -1,0 +1,132 @@
+<div class="page-wrapper">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="auth-container">
+
+    <!-- Brand -->
+    <div class="brand-header">
+      <span class="brand-icon">⚡</span>
+      <h1 class="brand-title">ATS<span class="accent">Scan</span></h1>
+      <p class="brand-sub">Create your free account</p>
+    </div>
+
+    <!-- Card -->
+    <div class="auth-card">
+      <h2 class="card-title">Get Started</h2>
+      <p class="card-sub">Join thousands optimizing their resumes</p>
+
+      <!-- Error Message -->
+      @if (errorMessage) {
+        <div class="alert-error">
+          <span>⚠️</span> {{ errorMessage }}
+        </div>
+      }
+
+      <!-- Success hint -->
+      @if (loading) {
+        <div class="alert-success">
+          <span>⏳</span> Creating your account...
+        </div>
+      }
+
+      <!-- Form -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input
+              type="text"
+              class="form-input"
+              formControlName="name"
+              [class.is-invalid]="submitted && f['name'].errors"
+              placeholder="Enter your full name"/>
+          </div>
+          @if (submitted && f['name'].errors) {
+            <div class="field-error">Name is required</div>
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input
+              type="email"
+              class="form-input"
+              formControlName="email"
+              [class.is-invalid]="submitted && f['email'].errors"
+              placeholder="Enter your email"/>
+          </div>
+          @if (submitted && f['email'].errors) {
+            <div class="field-error">
+              @if (f['email'].errors['required']) { <span>Email is required</span> }
+              @if (f['email'].errors['email']) { <span>Invalid email format</span> }
+            </div>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              class="form-input"
+              formControlName="password"
+              [class.is-invalid]="submitted && f['password'].errors"
+              placeholder="Min. 6 characters"/>
+            <button type="button" class="eye-btn" (click)="showPassword = !showPassword">
+              {{ showPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
+          @if (submitted && f['password'].errors) {
+            <div class="field-error">
+              @if (f['password'].errors['required']) { <span>Password is required</span> }
+              @if (f['password'].errors['minlength']) { <span>Minimum 6 characters required</span> }
+            </div>
+          }
+          <!-- Password strength indicator -->
+          @if (f['password'].value) {
+            <div class="strength-bar">
+              <div class="strength-fill"
+                [class.weak]="f['password'].value.length < 6"
+                [class.medium]="f['password'].value.length >= 6 && f['password'].value.length < 10"
+                [class.strong]="f['password'].value.length >= 10">
+              </div>
+              <span class="strength-label">
+                @if (f['password'].value.length < 6) { Weak }
+                @else if (f['password'].value.length < 10) { Good }
+                @else { Strong 💪 }
+              </span>
+            </div>
+          }
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="submit-btn" [disabled]="loading">
+          @if (loading) {
+            <span class="spinner"></span>
+          } @else {
+            <span>Create Account →</span>
+          }
+        </button>
+
+      </form>
+
+      <!-- Divider -->
+      <div class="divider"><span>or</span></div>
+
+      <!-- Login Link -->
+      <p class="switch-text">
+        Already have an account?
+        <a routerLink="/login" class="switch-link">Sign in →</a>
+      </p>
+    </div>
+  </div>
+</div>

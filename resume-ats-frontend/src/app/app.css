@@ -1,0 +1,31 @@
+/* ===== APP GLOBAL DARK THEME ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #09090f;  /* ✅ Dark background */
+  width: 100%;
+  overflow-x: hidden;          /* ✅ Side cut fix */
+}
+
+.main-content {
+  flex: 1;
+  padding: 0;                  /* ✅ padding काढला - cut होत होता */
+  width: 100%;
+}
+
+.app-footer {
+  background-color: #09090f;  /* ✅ Dark footer */
+  border-top: 1px solid #1e2030;
+  color: #64748b;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+}

@@ -1,0 +1,96 @@
+<div class="page-wrapper">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="auth-container">
+
+    <!-- Brand -->
+    <div class="brand-header">
+      <span class="brand-icon">⚡</span>
+      <h1 class="brand-title">ATS<span class="accent">Scan</span></h1>
+      <p class="brand-sub">Welcome back</p>
+    </div>
+
+    <!-- Card -->
+    <div class="auth-card">
+      <h2 class="card-title">Sign In</h2>
+      <p class="card-sub">Enter your credentials to continue</p>
+
+      <!-- Error Message -->
+      @if (errorMessage) {
+        <div class="alert-error">
+          <span>⚠️</span> {{ errorMessage }}
+        </div>
+      }
+
+      <!-- Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input
+              type="email"
+              class="form-input"
+              [class.is-invalid]="submitted && f['email'].errors"
+              formControlName="email"
+              placeholder="Enter your email"/>
+          </div>
+          @if (submitted && f['email'].errors) {
+            <div class="field-error">
+              @if (f['email'].errors['required']) { <span>Email is required</span> }
+              @if (f['email'].errors['email']) { <span>Invalid email format</span> }
+            </div>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label">
+            Password
+            <a routerLink="/forgot" class="forgot-link">Forgot password?</a>
+          </label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              class="form-input"
+              [class.is-invalid]="submitted && f['password'].errors"
+              formControlName="password"
+              placeholder="Enter your password"/>
+            <button type="button" class="eye-btn" (click)="showPassword = !showPassword">
+              {{ showPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
+          @if (submitted && f['password'].errors) {
+            <div class="field-error">
+              @if (f['password'].errors['required']) { <span>Password is required</span> }
+              @if (f['password'].errors['minlength']) { <span>Minimum 6 characters required</span> }
+            </div>
+          }
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="submit-btn" [disabled]="loading">
+          @if (loading) {
+            <span class="spinner"></span>
+          } @else {
+            <span>Sign In →</span>
+          }
+        </button>
+
+      </form>
+
+      <!-- Divider -->
+      <div class="divider"><span>or</span></div>
+
+      <!-- Register -->
+      <p class="switch-text">
+        Don't have an account?
+        <a routerLink="/register" class="switch-link">Create one free →</a>
+      </p>
+    </div>
+  </div>
+</div>
