@@ -227,8 +227,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Chandrakant**
 
-- GitHub: [@YOUR_USERNAME](https://github.com/YOUR_USERNAME)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/YOUR_PROFILE)
+- GitHub: [chandrakantbambarde](https://github.com/chandrakantbambarde)
+- LinkedIn: [chandrakant](https://linkedin.com/in/chandrakantbambarde)
 
 ## 🙏 Acknowledgments
 
@@ -239,7 +239,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-For support, email your-email@example.com or open an issue in this repository.
+For support, email chandrakantbambarde@gmail.com or open an issue in this repository.
 
 ---
 
