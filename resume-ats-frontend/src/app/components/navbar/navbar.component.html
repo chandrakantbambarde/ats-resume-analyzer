@@ -1,0 +1,43 @@
+<nav class="navbar">
+  <div class="nav-inner">
+    <!-- Brand -->
+    <a class="nav-brand" routerLink="/home">
+      <span class="brand-bolt">⚡</span>
+      <span class="brand-text">ATS<span class="brand-accent">Scan</span></span>
+    </a>
+
+    <!-- Nav Links -->
+    <div class="nav-links" *ngIf="isLoggedIn">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a routerLink="/upload" routerLinkActive="active" class="nav-link">
+        <span class="nav-icon">⚡</span> Analyze
+      </a>
+      <a routerLink="/history" routerLinkActive="active" class="nav-link">
+        <span class="nav-icon">🕐</span> History
+      </a>
+    </div>
+
+    <!-- Right Side -->
+    <div class="nav-right">
+      <ng-container *ngIf="!isLoggedIn">
+        <a routerLink="/login" class="btn-login">Login</a>
+        <a routerLink="/register" class="btn-register">Get Started</a>
+      </ng-container>
+
+      <ng-container *ngIf="isLoggedIn">
+        <div class="user-menu" (click)="toggleMenu()">
+          <div class="user-avatar">{{ getInitial() }}</div>
+          <span class="user-name">{{ username }}</span>
+          <span class="chevron" [class.open]="menuOpen">▾</span>
+        </div>
+        <div class="dropdown" *ngIf="menuOpen">
+          <a routerLink="/profile" class="dropdown-item" (click)="menuOpen=false">👤 Profile</a>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item danger" (click)="logout()">🚪 Logout</button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</nav>

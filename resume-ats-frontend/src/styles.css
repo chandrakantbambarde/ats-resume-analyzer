@@ -1,0 +1,51 @@
+/* ===== GLOBAL DARK THEME ===== */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #09090f;
+  --surface: #0f1117;
+  --surface2: #161821;
+  --border: #1e2030;
+  --text: #e2e8f0;
+  --text-muted: #64748b;
+  --accent: #6366f1;
+  --accent-glow: rgba(99, 102, 241, 0.25);
+  --green: #22c55e;
+  --orange: #f59e0b;
+  --red: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background: var(--bg) !important;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;  /* horizontal scroll बंद */
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Remove Bootstrap default white bg if used */
+.container, .container-fluid { background: transparent !important; }
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #2e3050; }
+
+/* Selection color */
+::selection { background: rgba(99, 102, 241, 0.3); color: #fff; }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

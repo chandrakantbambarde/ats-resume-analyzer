@@ -1,0 +1,94 @@
+
+
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+          <i class="bi bi-clock-history"></i> Analysis History
+        </h2>
+        <button class="btn btn-outline-primary" (click)="loadHistory()">
+          <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="card shadow mb-4">
+        <div class="card-body">
+          <div class="input-group">
+            <span class="input-group-text bg-primary text-white">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" class="form-control" 
+                   placeholder="Search by filename or job description..."
+                   [(ngModel)]="searchTerm" (input)="filterHistory()">
+            <button class="btn btn-outline-secondary" type="button" 
+                    *ngIf="searchTerm" (click)="searchTerm = ''; filterHistory()">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading your analysis history...</p>
+      </div>
+
+      <!-- History Table -->
+      <div *ngIf="!loading" class="card shadow">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-primary">
+                <tr>
+                  <th>#</th>
+                  <th>File Name</th>
+                  <th>Job Description Preview</th>
+                  <th>ATS Score</th>
+                  <th>Analyzed On</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of paginatedItems; let i = index">
+                  <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+                  <td>
+                    <i class="bi bi-file-pdf text-danger"></i>
+                    {{ item.fileName }}
+                  </td>
+                  <td>
+                    <span class="text-truncate d-inline-block" style="max-width: 250px;">
+                      {{ item.jobDescription?.substring(0, 50) }}...
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge bg-{{ getScoreColor(item.atsScore) }} fs-6">
+                      {{ item.atsScore }}%
+                    </span>
+                  </td>
+                  <td>{{ item.analyzedAt | date:'medium' }}</td>
+                  <td>
+                    <div class="btn-group" role="group">
+                      <button class="btn btn-sm btn-info" 
+                              (click)="viewDetails(item)"
+                              title="View Details">
+                        <i class="bi bi-eye"></i>
+                      </button>
+                      <button class="btn btn-sm btn-danger" 
+                              (click)="deleteHistory(item.id)"
+                              title="Delete">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="filteredHistory.length === 0">
+                  <td colspan="6" class="text-center py-4">
+                    <i class="bi bi-inbox fs-1 d-block text-muted"></i>
+                   

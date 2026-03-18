@@ -1,0 +1,69 @@
+<div class="page-wrapper">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="home-content">
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="hero-badge">✨ AI-Powered · Free to Use</div>
+      <h1 class="hero-title">Beat the <span class="accent">ATS</span> System.<br>Land More Interviews.</h1>
+      <p class="hero-sub">Upload your resume, paste a job description, and get an instant AI analysis with your ATS score, missing keywords, and actionable suggestions.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" (click)="goToUpload()">🚀 Analyze My Resume</button>
+        <button class="btn-secondary" *ngIf="!isLoggedIn" (click)="goToRegister()">Create Free Account →</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">95%</span><span class="stat-label">Accuracy</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">10s</span><span class="stat-label">Analysis Time</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">AI</span><span class="stat-label">Powered</span></div>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+      <p class="section-label">How it works</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📄</div>
+          <h3>Upload Resume</h3>
+          <p>Drop your PDF resume and let our AI extract and analyze every detail instantly.</p>
+        </div>
+        <div class="feature-card featured">
+          <div class="feature-icon">⚡</div>
+          <h3>Get ATS Score</h3>
+          <p>Receive an instant compatibility score showing how well your resume matches the job.</p>
+          <div class="featured-badge">Core Feature</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Improve Resume</h3>
+          <p>Get specific keyword suggestions and formatting tips to maximize your ATS score.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section" *ngIf="!isLoggedIn">
+      <div class="cta-card">
+        <h2>Ready to get more interviews?</h2>
+        <p>Join thousands of job seekers who optimized their resumes with ATSScan.</p>
+        <div class="cta-actions">
+          <button class="btn-primary" (click)="goToRegister()">Get Started Free</button>
+          <button class="btn-ghost" (click)="goToLogin()">Already have an account? Login</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Upload CTA for logged in users -->
+    <div class="cta-section" *ngIf="isLoggedIn">
+      <div class="cta-card">
+        <h2>Welcome back! 👋</h2>
+        <p>Ready to analyze another resume?</p>
+        <button class="btn-primary" (click)="goToUpload()">🚀 Start New Analysis</button>
+      </div>
+    </div>
+  </div>
+</div>
