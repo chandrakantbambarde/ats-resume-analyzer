@@ -3,12 +3,18 @@ package com.atsanalyzer.resume_ats_analyzer.controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.atsanalyzer.resume_ats_analyzer.repository.UserRepository;
+import com.atsanalyzer.resume_ats_analyzer.model.User;
 import java.util.*;
 
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
+    
+    @Autowired
+    private UserRepository userRepository;
     
     @GetMapping("/test")
     public String test() {
@@ -28,6 +34,18 @@ public class AuthController {
                 return ResponseEntity.badRequest()
                     .body(Map.of("error", "All fields are required"));
             }
+            
+            if (userRepository.existsByEmail(email)) {
+                return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Email already exists"));
+            }
+            
+            User user = new User();
+            user.setName(name);
+            user.setEmail(email);
+            user.setPassword(password); // Note: storing plain text since no security dependency is present
+            
+            userRepository.save(user);
             
             // Success response
             Map<String, String> response = new HashMap<>();
@@ -55,12 +73,24 @@ public class AuthController {
                     .body(Map.of("error", "Email and password required"));
             }
             
-            // Mock successful login
+            Optional<User> userOpt = userRepository.findByEmail(email);
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid email or password"));
+            }
+            
+            User user = userOpt.get();
+            if (!user.getPassword().equals(password)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid email or password"));
+            }
+            
+            // Successful login
             Map<String, Object> response = new HashMap<>();
-            response.put("token", "token-" + System.currentTimeMillis());
-            response.put("userId", 1);
-            response.put("email", email);
-            response.put("name", email.split("@")[0]);
+            response.put("token", "token-" + System.currentTimeMillis()); // Mock token
+            response.put("userId", user.getId());
+            response.put("email", user.getEmail());
+            response.put("name", user.getName());
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {

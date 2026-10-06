@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { ResumeService } from '../../services/auth/service/resume.service';
 import { AuthService } from '../../services/auth/service/auth.service';
 import { AnalysisHistory } from '../../models/user/model/analysis.model';
-
+    
 @Component({
     selector: 'app-history',
     standalone: true,

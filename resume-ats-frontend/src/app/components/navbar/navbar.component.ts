@@ -1,6 +1,8 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../../services/auth/service/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -9,20 +11,33 @@ import { RouterModule, Router } from '@angular/router';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
-  username = '';
+  username = 'User';
   menuOpen = false;
+  private authSub: Subscription | undefined;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
-    this.isLoggedIn = !!localStorage.getItem('token');
-    this.username = localStorage.getItem('username') || 'User';
+    this.authSub = this.authService.currentUser$.subscribe(user => {
+      this.isLoggedIn = !!user;
+      if (user && user.name) {
+        this.username = user.name;
+      } else {
+        this.username = 'User';
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.authSub) {
+      this.authSub.unsubscribe();
+    }
   }
 
   getInitial(): string {
-    return this.username.charAt(0).toUpperCase();
+    return this.username ? this.username.charAt(0).toUpperCase() : 'U';
   }
 
   toggleMenu() {
@@ -39,10 +54,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    this.isLoggedIn = false;
+    this.authService.logout();
     this.menuOpen = false;
-    this.router.navigate(['/home']);
   }
 }

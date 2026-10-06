@@ -1,16 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-:host {
-  --bg: #09090f;
-  --surface: #0f1117;
-  --surface2: #161821;
-  --border: #1e2030;
-  --text: #e2e8f0;
-  --text-muted: #64748b;
-  --accent: #6366f1;
-  --accent-glow: rgba(99, 102, 241, 0.25);
-  --red: #ef4444;
-}
+
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -29,8 +19,8 @@
 
 /* Orbs */
 .orb { position: fixed; border-radius: 50%; filter: blur(80px); opacity: .12; pointer-events: none; z-index: 0; animation: float 8s ease-in-out infinite; }
-.orb-1 { width: 500px; height: 500px; background: #6366f1; top: -150px; left: -100px; }
-.orb-2 { width: 400px; height: 400px; background: #8b5cf6; bottom: -100px; right: -80px; animation-delay: 3s; }
+.orb-1 { width: 500px; height: 500px; background: var(--accent); top: -150px; left: -100px; }
+.orb-2 { width: 400px; height: 400px; background: var(--accent-hover); bottom: -100px; right: -80px; animation-delay: 3s; }
 @keyframes float { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-30px) scale(1.05); } }
 
 /* Container */
@@ -45,18 +35,18 @@
 .brand-header { text-align: center; margin-bottom: 28px; }
 .brand-icon { font-size: 32px; display: block; margin-bottom: 6px; animation: pulse 2s ease infinite; }
 @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.15); } }
-.brand-title { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: #fff; letter-spacing: -1px; }
-.accent { background: linear-gradient(135deg, #6366f1, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.brand-title { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: var(--text); letter-spacing: -1px; }
+.accent { background: var(--accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .brand-sub { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
 
 /* Card */
 .auth-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 20px; padding: 32px;
-  box-shadow: 0 0 60px rgba(99,102,241,0.07);
+  border-radius: 10px; padding: 32px;
+  box-shadow: var(--shadow);
 }
-.card-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.card-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
 .card-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
 
 /* Error Alert */
@@ -91,14 +81,14 @@
   width: 100%;
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 10px;
   padding: 13px 44px;
   color: var(--text);
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-.form-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.form-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--shadow); }
 .form-input::placeholder { color: var(--text-muted); }
 .form-input.is-invalid { border-color: var(--red); }
 
@@ -113,23 +103,23 @@
 /* Submit */
 .submit-btn {
   width: 100%; margin-top: 8px; padding: 14px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: #fff; border: none; border-radius: 12px;
+  background: var(--accent);
+  color: var(--text); border: none; border-radius: 10px;
   font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+  box-shadow: var(--shadow);
   transition: all 0.3s;
   display: flex; align-items: center; justify-content: center;
   min-height: 50px;
 }
-.submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.5); }
+.submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow); }
 .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
 /* Spinner */
 .spinner {
   width: 20px; height: 20px;
   border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: #fff; border-radius: 50%;
+  border-top-color: var(--text); border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }

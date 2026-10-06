@@ -1,51 +1,113 @@
-/* ===== GLOBAL DARK THEME ===== */
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
 :root {
-  --bg: #09090f;
-  --surface: #0f1117;
-  --surface2: #161821;
-  --border: #1e2030;
-  --text: #e2e8f0;
-  --text-muted: #64748b;
-  --accent: #6366f1;
-  --accent-glow: rgba(99, 102, 241, 0.25);
-  --green: #22c55e;
-  --orange: #f59e0b;
+  --bg: #FFF8DC;
+  --surface: #FFFFFF;
+  --surface2: #FFFFFF;
+  --border: #F0E0A0;
+  --text: #2B2B2B;
+  --text-muted: #6B6B6B;
+  --accent: #FFC107;
+  --accent-glow: rgba(255, 193, 7, 0.25);
+  --accent-hover: #E0A800;
+  --shadow: 0 4px 12px rgba(240, 224, 160, 0.8);
   --red: #ef4444;
 }
 
-* {
-  box-sizing: border-box;
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
   margin: 0;
   padding: 0;
 }
 
-html, body {
-  background: var(--bg) !important;
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;  /* horizontal scroll बंद */
-  width: 100%;
-  max-width: 100%;
+/* Global simple and clean elements */
+* {
+  box-sizing: border-box;
 }
 
-/* Remove Bootstrap default white bg if used */
-.container, .container-fluid { background: transparent !important; }
-
-/* Scrollbar styling */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #2e3050; }
-
-/* Selection color */
-::selection { background: rgba(99, 102, 241, 0.3); color: #fff; }
-
-/* Animations */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* Bootstrap Overrides for White & Yellow Theme */
+.btn-primary, .btn-primary:active, .btn-primary:focus {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: var(--text) !important;
 }
+.btn-primary:hover {
+  background-color: var(--accent-hover) !important;
+  border-color: var(--accent-hover) !important;
+}
+.btn-outline-primary {
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+.btn-outline-primary:hover {
+  background-color: var(--accent) !important;
+  color: var(--text) !important;
+}
+
+.card {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--shadow) !important;
+}
+
+.table {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+}
+.table thead th {
+  background-color: var(--accent) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.table td, .table th {
+  border-color: var(--border) !important;
+}
+
+.bg-dark, .bg-light, .bg-primary, .bg-secondary {
+  background-color: var(--surface) !important;
+}
+.text-white, .text-light, .text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* Base button and simple elements */
+button, .btn {
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+/* Forms and Inputs */
+.form-control, .form-select, input, textarea {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 8px !important;
+}
+.form-control:focus, .form-select:focus, input:focus, textarea:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 0.25rem var(--accent-glow) !important;
+}
+.form-label, label {
+  color: var(--text) !important;
+}
+
+/* Badges */
+.badge {
+  border-radius: 8px !important;
+}
+.bg-success {
+  background-color: #28a745 !important;
+  color: #fff !important;
+}
+.bg-warning {
+  background-color: var(--accent) !important;
+  color: var(--text) !important;
+}
+.bg-danger {
+  background-color: var(--red) !important;
+  color: #fff !important;
+}
+

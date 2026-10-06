@@ -1,4 +1,4 @@
-/* ===== APP GLOBAL DARK THEME ===== */
+/* ===== APP GLOBAL THEME ===== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,7 +9,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #09090f; 
+  background-color: var(--bg); 
   width: 100%;
   overflow-x: hidden;          /* Side cut fix */
 }
@@ -21,9 +21,9 @@
 }
 
 .app-footer {
-  background-color: #09090f;   
-  border-top: 1px solid #1e2030;
-  color: #64748b;
+  background-color: #FFFFFF;   
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
   text-align: center;
   padding: 20px;
   font-size: 14px;

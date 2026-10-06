@@ -23,6 +23,21 @@ export const routes: Routes = [
             .then(m => m.UploadResumeComponent)
     },
     {
+        path: 'profile',
+        loadComponent: () => import('./components/profile/profile.component')
+            .then(m => m.ProfileComponent)
+    },
+    {
+        path: 'dashboard',
+        loadComponent: () => import('./components/dashboard/dashboard.component')
+            .then(m => m.DashboardComponent)
+    },
+    {
+        path: 'history',
+        loadComponent: () => import('./components/history/history.component')
+            .then(m => m.HistoryComponent)
+    },
+    {
         path: '**',
         redirectTo: ''
     }
