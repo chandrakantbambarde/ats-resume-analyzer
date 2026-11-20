@@ -25,6 +25,16 @@ import { AuthService } from '../../services/auth/service/auth.service';
                 <div class="col-md-4">
                     <div class="card text-center">
                         <div class="card-body">
+                            <h5 class="card-title">Skill Gap Analysis</h5>
+                            <p class="card-text">Identify missing skills & AI roadmaps</p>
+                            <a routerLink="/skill-gap" class="btn btn-warning">Analyze Skills</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body">
                             <h5 class="card-title">View History</h5>
                             <p class="card-text">Check past analyses</p>
                             <a routerLink="/history" class="btn btn-info">History</a>

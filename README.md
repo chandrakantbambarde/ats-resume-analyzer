@@ -9,6 +9,7 @@ AI-Powered Resume Intelligence System that helps job seekers optimize their resu
 ## ✨ Features
 
 - **🎯 ATS Score Analysis** - Get instant compatibility score (0-100%)
+- **🔍 Skill Gap Analysis** - Extract skills from Resume & JD, calculate match %, categorize missing skills by priority (High/Medium/Low), compare Required vs Preferred skills, and generate AI personalized learning roadmaps & practice projects
 - **📊 Section-wise Scoring** - Skills, Experience, and Education breakdown
 - **💪 Strong Matches** - Keywords present in both resume and job description
 - **📌 Missing Keywords** - Identify gaps in your resume

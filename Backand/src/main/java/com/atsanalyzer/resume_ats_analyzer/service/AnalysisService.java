@@ -1,6 +1,7 @@
 package com.atsanalyzer.resume_ats_analyzer.service;
 
 import com.atsanalyzer.resume_ats_analyzer.model.AnalysisResponse;
+import com.atsanalyzer.resume_ats_analyzer.model.SkillGapResponse;
 import com.atsanalyzer.resume_ats_analyzer.model.AnalysisHistory;
 import com.atsanalyzer.resume_ats_analyzer.model.User;
 import com.atsanalyzer.resume_ats_analyzer.repository.AnalysisHistoryRepository;
@@ -52,6 +53,27 @@ public class AnalysisService {
             AnalysisResponse error = new AnalysisResponse();
             error.setAtsScore(0);
             error.setOverallRecommendation("Error: " + e.getMessage());
+            return error;
+        }
+    }
+
+    public SkillGapResponse analyzeSkillGap(MultipartFile file, String jobDescription) {
+        try {
+            System.out.println("📥 AnalysisService: Starting Skill Gap Analysis");
+            String resumeText = pdfParserService.extractText(file);
+            System.out.println("📄 Extracted resume text length: " + resumeText.length());
+
+            SkillGapResponse response = geminiAIService.analyzeSkillGap(resumeText, jobDescription);
+            response.setFileName(file != null ? file.getOriginalFilename() : "Uploaded Resume");
+            System.out.println("✅ Skill Gap Analysis complete - Match: " + response.getSkillMatchPercentage() + "%");
+            return response;
+        } catch (Exception e) {
+            System.err.println("❌ Skill Gap Analysis failed: " + e.getMessage());
+            e.printStackTrace();
+            SkillGapResponse error = new SkillGapResponse();
+            error.setFileName(file != null ? file.getOriginalFilename() : "Resume");
+            error.setSkillMatchPercentage(0);
+            error.setPersonalizedRecommendations(Collections.singletonList("Analysis failed: " + e.getMessage()));
             return error;
         }
     }

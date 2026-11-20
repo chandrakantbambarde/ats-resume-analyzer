@@ -197,6 +197,53 @@
         <p class="card-label">⚠️ Format Issues</p>
         <p class="format-text">{{ result.formatIssues }}</p>
       </div>
+
+      <!-- Skill Gap Analysis Card -->
+      <div class="card skill-gap-preview-card" *ngIf="result?.skillGapAnalysis" style="grid-column: 1 / -1;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+          <p class="card-label" style="margin-bottom: 0;">🎯 Skill Gap Analysis</p>
+          <a routerLink="/skill-gap" class="btn btn-sm btn-outline-primary" style="font-size: 12px; font-weight: 600;">Open Full Skill Gap Dashboard →</a>
+        </div>
+
+        <div style="display: flex; gap: 14px; margin-bottom: 16px; flex-wrap: wrap;">
+          <div style="background: rgba(255, 193, 7, 0.15); border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; flex: 1; min-width: 140px;">
+            <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Skill Match</div>
+            <div style="font-size: 22px; font-weight: 800; color: #855b00;">{{ result.skillGapAnalysis.skillMatchPercentage }}%</div>
+          </div>
+          <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 10px 14px; border-radius: 8px; flex: 1; min-width: 140px;">
+            <div style="font-size: 11px; text-transform: uppercase; color: #b91c1c; font-weight: 700;">High Priority Gaps</div>
+            <div style="font-size: 22px; font-weight: 800; color: #dc2626;">{{ result.skillGapAnalysis.highPriorityCount }}</div>
+          </div>
+          <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); padding: 10px 14px; border-radius: 8px; flex: 1; min-width: 140px;">
+            <div style="font-size: 11px; text-transform: uppercase; color: #b45309; font-weight: 700;">Medium Gaps</div>
+            <div style="font-size: 22px; font-weight: 800; color: #d97706;">{{ result.skillGapAnalysis.mediumPriorityCount }}</div>
+          </div>
+          <div style="background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.2); padding: 10px 14px; border-radius: 8px; flex: 1; min-width: 140px;">
+            <div style="font-size: 11px; text-transform: uppercase; color: #0891b2; font-weight: 700;">Low Gaps</div>
+            <div style="font-size: 22px; font-weight: 800; color: #0891b2;">{{ result.skillGapAnalysis.lowPriorityCount }}</div>
+          </div>
+        </div>
+
+        <div *ngIf="result.skillGapAnalysis.missingSkills?.length > 0" style="margin-bottom: 12px;">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">PRIORITY MISSING SKILLS:</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <span *ngFor="let m of result.skillGapAnalysis.missingSkills"
+                  [style.background]="m.priority === 'HIGH' ? 'rgba(239, 68, 68, 0.15)' : (m.priority === 'MEDIUM' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(6, 182, 212, 0.15)')"
+                  [style.color]="m.priority === 'HIGH' ? '#b91c1c' : (m.priority === 'MEDIUM' ? '#b45309' : '#0891b2')"
+                  [style.border]="'1px solid ' + (m.priority === 'HIGH' ? 'rgba(239, 68, 68, 0.3)' : (m.priority === 'MEDIUM' ? 'rgba(245, 158, 11, 0.3)' : 'rgba(6, 182, 212, 0.3)'))"
+                  style="font-size: 12px; padding: 4px 10px; border-radius: 6px; font-weight: 600;">
+              {{ m.priority }}: {{ m.name }}
+            </span>
+          </div>
+        </div>
+
+        <div *ngIf="result.skillGapAnalysis.personalizedRecommendations?.length > 0">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">AI LEARNING RECOMMENDATION:</div>
+          <div style="font-size: 13px; color: var(--text); background: rgba(255, 255, 255, 0.7); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);">
+            💡 {{ result.skillGapAnalysis.personalizedRecommendations[0] }}
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="cta-section">

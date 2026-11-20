@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AnalysisHistory } from '../../../models/user/model/analysis.model';
+import { AnalysisHistory, SkillGapResponse } from '../../../models/user/model/analysis.model';
 
 @Injectable({ providedIn: 'root' })
 export class ResumeService {
@@ -16,6 +16,13 @@ export class ResumeService {
     formData.append('jobDescription', jobDescription);
     formData.append('userId', userId.toString());
     return this.http.post(`${this.apiUrl}/analyze`, formData);
+  }
+
+  analyzeSkillGap(file: File, jobDescription: string): Observable<SkillGapResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('jobDescription', jobDescription);
+    return this.http.post<SkillGapResponse>(`${this.apiUrl}/skill-gap`, formData);
   }
 
   getUserHistory(userId: number): Observable<AnalysisHistory[]> {

@@ -24,6 +24,7 @@ public class AnalysisResponse {
     private int jdMatchScore;
     private List<String> jdMatchedSkills;
     private List<String> jdMissingSkills;
+    private SkillGapResponse skillGapAnalysis;
 
     // Existing getters/setters
     public int getAtsScore() { return atsScore; }
@@ -62,4 +63,6 @@ public class AnalysisResponse {
     public void setJdMatchedSkills(List<String> jdMatchedSkills) { this.jdMatchedSkills = jdMatchedSkills; }
     public List<String> getJdMissingSkills() { return jdMissingSkills; }
     public void setJdMissingSkills(List<String> jdMissingSkills) { this.jdMissingSkills = jdMissingSkills; }
+    public SkillGapResponse getSkillGapAnalysis() { return skillGapAnalysis; }
+    public void setSkillGapAnalysis(SkillGapResponse skillGapAnalysis) { this.skillGapAnalysis = skillGapAnalysis; }
 }

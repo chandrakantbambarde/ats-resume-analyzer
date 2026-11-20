@@ -89,7 +89,7 @@
       <!-- Register -->
       <p class="switch-text">
         Don't have an account?
-        <a routerLink="/register" class="switch-link">Create one free →</a>
+        <a routerLink="/register" [queryParams]="{ returnUrl: returnUrl }" class="switch-link">Create one free →</a>
       </p>
     </div>
   </div>

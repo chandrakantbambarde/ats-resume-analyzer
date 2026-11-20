@@ -18,7 +18,13 @@ export class HomeComponent implements OnInit {
     this.isLoggedIn = !!localStorage.getItem('token');
   }
 
-  goToUpload() { this.router.navigate(['/upload']); }
-  goToLogin() { this.router.navigate(['/login']); }
-  goToRegister() { this.router.navigate(['/register']); }
+  goToUpload() {
+    if (this.isLoggedIn) {
+      this.router.navigate(['/upload']);
+    } else {
+      this.router.navigate(['/login'], { queryParams: { returnUrl: '/upload' } });
+    }
+  }
+  goToLogin() { this.router.navigate(['/login'], { queryParams: { returnUrl: '/upload' } }); }
+  goToRegister() { this.router.navigate(['/register'], { queryParams: { returnUrl: '/upload' } }); }
 }

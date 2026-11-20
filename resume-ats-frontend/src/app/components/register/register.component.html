@@ -125,7 +125,7 @@
       <!-- Login Link -->
       <p class="switch-text">
         Already have an account?
-        <a routerLink="/login" class="switch-link">Sign in →</a>
+        <a routerLink="/login" [queryParams]="{ returnUrl: returnUrl }" class="switch-link">Sign in →</a>
       </p>
     </div>
   </div>

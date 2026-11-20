@@ -2,11 +2,13 @@ import { Component, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth/service/auth.service';
 
 @Component({
   selector: 'app-upload-resume',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './upload-resume.component.html',
   styleUrls: ['./upload-resume.component.css']
 })
@@ -23,7 +25,11 @@ export class UploadResumeComponent implements OnDestroy {
   private loadInterval: any;
   private scoreInterval: any;
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
+  ) {}
 
   ngOnDestroy() { this.clearIntervals(); }
 
@@ -60,6 +66,11 @@ export class UploadResumeComponent implements OnDestroy {
     const formData = new FormData();
     formData.append('file', this.selectedFile);
     formData.append('jobDescription', this.jobDescription);
+
+    const userId = this.authService.getUserId();
+    if (userId) {
+      formData.append('userId', userId.toString());
+    }
 
     this.http.post('http://localhost:8080/api/resume/analyze', formData).subscribe({
       next: (res: any) => {

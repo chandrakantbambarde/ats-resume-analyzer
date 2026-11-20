@@ -35,4 +35,5 @@ public class PdfParserService {
         return String.format("File: %s, Size: %d bytes, Type: %s", 
             file.getOriginalFilename(), file.getSize(), file.getContentType());
     }
+
 }

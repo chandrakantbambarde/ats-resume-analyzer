@@ -1,6 +1,7 @@
 package com.atsanalyzer.resume_ats_analyzer.controller;
 
 import com.atsanalyzer.resume_ats_analyzer.model.AnalysisResponse;
+import com.atsanalyzer.resume_ats_analyzer.model.SkillGapResponse;
 import com.atsanalyzer.resume_ats_analyzer.model.AnalysisHistory;
 import com.atsanalyzer.resume_ats_analyzer.service.AnalysisService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,19 @@ public class ResumeController {
         
         //Passing 3 parameters
         AnalysisResponse response = analysisService.analyzeResume(file, jobDescription, userId);
+        return ResponseEntity.ok(response);
+    }
+    
+    @PostMapping("/skill-gap")
+    public ResponseEntity<SkillGapResponse> analyzeSkillGap(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("jobDescription") String jobDescription) {
+        
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        SkillGapResponse response = analysisService.analyzeSkillGap(file, jobDescription);
         return ResponseEntity.ok(response);
     }
     

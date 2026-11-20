@@ -1,0 +1,543 @@
+<div class="skill-gap-page">
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <!-- ============================================== -->
+  <!-- 1. INPUT / UPLOAD SCREEN                       -->
+  <!-- ============================================== -->
+  <div class="input-container" *ngIf="!loading && !result">
+    <div class="page-header">
+      <div class="badge-pill">
+        <span class="pulse-dot"></span> AI Career Intelligence
+      </div>
+      <h1 class="page-title">Skill Gap <span class="accent-text">Analysis</span></h1>
+      <p class="page-subtitle">
+        Compare your resume skills directly against job descriptions. Identify missing competencies, prioritize gaps, and get personalized Gemini AI learning roadmaps.
+      </p>
+    </div>
+
+    <div class="card-glass form-card">
+      <!-- File Dropzone -->
+      <div class="drop-zone" [class.has-file]="selectedFile"
+           (click)="fileInput.click()"
+           (dragover)="$event.preventDefault()"
+           (drop)="onDrop($event)">
+        <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept=".pdf">
+
+        <div class="drop-empty" *ngIf="!selectedFile">
+          <div class="upload-icon-circle">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+          <div class="drop-text-primary">Upload Resume (PDF)</div>
+          <div class="drop-text-secondary">Drag & drop your resume file here or click to browse</div>
+        </div>
+
+        <div class="drop-file-ready" *ngIf="selectedFile">
+          <div class="file-badge-icon">📄</div>
+          <div class="file-details">
+            <span class="file-name">{{ selectedFile.name }}</span>
+            <span class="file-meta">{{ (selectedFile.size / 1024).toFixed(1) }} KB · Ready for Gap Analysis ✓</span>
+          </div>
+          <button type="button" class="btn-remove" (click)="removeFile($event)" title="Remove file">✕</button>
+        </div>
+      </div>
+
+      <!-- Job Description Input -->
+      <div class="jd-group">
+        <div class="jd-header-row">
+          <label class="section-label">
+            <span class="label-icon">🎯</span> Target Job Description
+          </label>
+          <button type="button" class="btn-sample" (click)="fillSampleJd()">
+            ⚡ Load Sample JD
+          </button>
+        </div>
+        <textarea
+          class="jd-input"
+          [(ngModel)]="jobDescription"
+          rows="7"
+          placeholder="Paste the full job description here (responsibilities, required qualifications, preferred tech stack)...">
+        </textarea>
+        <div class="char-counter">
+          {{ jobDescription.length }} characters entered
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        class="btn-analyze"
+        [disabled]="!selectedFile || !jobDescription.trim()"
+        (click)="analyzeSkillGap()">
+        <span class="btn-icon">⚡</span>
+        <span>Run Deep Skill Gap Analysis</span>
+        <span class="btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- 2. LOADING STATE                               -->
+  <!-- ============================================== -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="card-glass loading-card">
+      <div class="pulse-loader">
+        <div class="ripple ripple-1"></div>
+        <div class="ripple ripple-2"></div>
+        <div class="ripple ripple-3"></div>
+        <span class="loader-icon">🎯</span>
+      </div>
+
+      <h2 class="loading-title">Analyzing Skill Matrices</h2>
+      <p class="loading-subtitle">Gemini AI is extracting competencies and calculating priority gaps...</p>
+
+      <div class="stepper-list">
+        <div class="step-item" [class.step-active]="loadStep >= 1">
+          <span class="step-indicator">✓</span>
+          <span>1. Extracting Resume Skills & JD Requirements</span>
+        </div>
+        <div class="step-item" [class.step-active]="loadStep >= 2">
+          <span class="step-indicator">✓</span>
+          <span>2. Matching Skills & Computing Alignment Percentage</span>
+        </div>
+        <div class="step-item" [class.step-active]="loadStep >= 3">
+          <span class="step-indicator">✓</span>
+          <span>3. Prioritizing Missing Skills (High, Medium, Low)</span>
+        </div>
+        <div class="step-item" [class.step-active]="loadStep >= 4">
+          <span class="step-indicator">✓</span>
+          <span>4. Synthesizing AI Learning Roadmap & Practice Projects</span>
+        </div>
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-bar-fill" [style.width.%]="loadProgress"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- 3. RESULTS DASHBOARD                           -->
+  <!-- ============================================== -->
+  <div class="dashboard-container" *ngIf="!loading && result">
+
+    <!-- Top Action Bar -->
+    <div class="top-action-bar">
+      <button class="btn-secondary" (click)="resetForm()">
+        ← New Analysis
+      </button>
+
+      <div class="report-meta">
+        <span class="badge-tag">
+          📄 {{ result.fileName || 'Resume' }}
+        </span>
+        <span class="badge-tag accent">
+          🤖 AI Intelligence Active
+        </span>
+      </div>
+
+      <button class="btn-export" (click)="exportReport()">
+        📥 Export Gap Report (.txt)
+      </button>
+    </div>
+
+    <!-- KPI Summary Grid -->
+    <div class="kpi-grid">
+      <!-- KPI 1: Overall Match Gauge -->
+      <div class="kpi-card match-gauge-card">
+        <div class="kpi-label">Overall Skill Match</div>
+        <div class="gauge-wrapper">
+          <svg class="gauge-svg" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(240, 224, 160, 0.4)" stroke-width="10"/>
+            <circle cx="60" cy="60" r="50" fill="none"
+              [attr.stroke]="getScoreColor(result.skillMatchPercentage)"
+              stroke-width="10" stroke-linecap="round"
+              stroke-dasharray="314"
+              [attr.stroke-dashoffset]="getStrokeDashOffset(animatedScore)"
+              class="gauge-circle" transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="gauge-content">
+            <span class="gauge-number" [style.color]="getScoreColor(result.skillMatchPercentage)">
+              {{ animatedScore }}%
+            </span>
+            <span class="gauge-grade">{{ getMatchGrade(result.skillMatchPercentage) }}</span>
+          </div>
+        </div>
+        <div class="kpi-footnote">
+          {{ result.matchedSkillsCount }} of {{ result.totalSkillsCount }} JD skills matched
+        </div>
+      </div>
+
+      <!-- KPI 2: Required Skills Match -->
+      <div class="kpi-card">
+        <div class="kpi-label">Required Skills Match</div>
+        <div class="kpi-big-stat" [style.color]="getScoreColor(result.requiredMatchPercentage)">
+          {{ result.requiredMatchPercentage }}%
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill" [style.width.%]="result.requiredMatchPercentage"
+               [style.background]="getScoreColor(result.requiredMatchPercentage)"></div>
+        </div>
+        <div class="kpi-footnote">
+          Must-have core qualifications
+        </div>
+      </div>
+
+      <!-- KPI 3: Preferred Skills Match -->
+      <div class="kpi-card">
+        <div class="kpi-label">Preferred Skills Match</div>
+        <div class="kpi-big-stat" [style.color]="getScoreColor(result.preferredMatchPercentage)">
+          {{ result.preferredMatchPercentage }}%
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill" [style.width.%]="result.preferredMatchPercentage"
+               [style.background]="getScoreColor(result.preferredMatchPercentage)"></div>
+        </div>
+        <div class="kpi-footnote">
+          Nice-to-have bonus competencies
+        </div>
+      </div>
+
+      <!-- KPI 4: Gap Priority Distribution -->
+      <div class="kpi-card">
+        <div class="kpi-label">Missing Skills Breakdown</div>
+        <div class="priority-pills-row">
+          <div class="pill-stat stat-high">
+            <span class="stat-num">{{ result.highPriorityCount }}</span>
+            <span class="stat-name">High Priority</span>
+          </div>
+          <div class="pill-stat stat-med">
+            <span class="stat-num">{{ result.mediumPriorityCount }}</span>
+            <span class="stat-name">Medium</span>
+          </div>
+          <div class="pill-stat stat-low">
+            <span class="stat-num">{{ result.lowPriorityCount }}</span>
+            <span class="stat-name">Low</span>
+          </div>
+        </div>
+        <div class="kpi-footnote">
+          {{ result.missingSkillsCount }} total missing competencies
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- INTERACTIVE DASHBOARD TABS                     -->
+    <!-- ============================================== -->
+    <div class="tabs-nav">
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'overview'"
+        (click)="activeTab = 'overview'">
+        📊 Skills Overview
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'priority'"
+        (click)="activeTab = 'priority'">
+        ⚠️ Missing Skills & Priorities ({{ result.missingSkillsCount }})
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'recommendations'"
+        (click)="activeTab = 'recommendations'">
+        💡 AI Recommendations
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'learning'"
+        (click)="activeTab = 'learning'">
+        🚀 Learning Paths & Practice Projects
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'resumeSkills'"
+        (click)="activeTab = 'resumeSkills'">
+        📄 Extracted Resume Skills ({{ result.resumeSkills?.length || 0 }})
+      </button>
+    </div>
+
+    <!-- TAB CONTENT 1: OVERVIEW (Required vs Preferred, Matched vs Missing) -->
+    <div class="tab-panel" *ngIf="activeTab === 'overview'">
+      <div class="two-col-grid">
+
+        <!-- Column 1: Required Skills Comparison -->
+        <div class="card-glass breakdown-box">
+          <div class="box-header">
+            <div class="box-title">
+              <span class="dot-indicator red"></span> Required Skills (Must-Have)
+            </div>
+            <span class="badge-count">{{ result.requiredSkills?.length || 0 }} skills</span>
+          </div>
+          <p class="box-desc">Mandatory qualifications explicitly listed in the Job Description.</p>
+
+          <div class="chips-cloud">
+            <div *ngFor="let s of result.requiredSkills" class="skill-pill"
+                 [class.pill-matched]="result.matchedSkills | json | lowercase"
+                 [ngClass]="{
+                   'is-matched': (result.matchedSkills | json).includes(s),
+                   'is-missing': !(result.matchedSkills | json).includes(s)
+                 }">
+              <span class="pill-status">
+                {{ (result.matchedSkills | json).includes(s) ? '✓ Matched' : '✕ Missing' }}
+              </span>
+              <span class="pill-label">{{ s }}</span>
+            </div>
+            <div *ngIf="!result.requiredSkills || result.requiredSkills.length === 0" class="empty-state-text">
+              No specific required skills extracted.
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2: Preferred Skills Comparison -->
+        <div class="card-glass breakdown-box">
+          <div class="box-header">
+            <div class="box-title">
+              <span class="dot-indicator blue"></span> Preferred Skills (Good-to-Have)
+            </div>
+            <span class="badge-count">{{ result.preferredSkills?.length || 0 }} skills</span>
+          </div>
+          <p class="box-desc">Bonus qualifications that give candidates a competitive edge.</p>
+
+          <div class="chips-cloud">
+            <div *ngFor="let s of result.preferredSkills" class="skill-pill"
+                 [ngClass]="{
+                   'is-matched': (result.matchedSkills | json).includes(s),
+                   'is-missing': !(result.matchedSkills | json).includes(s)
+                 }">
+              <span class="pill-status">
+                {{ (result.matchedSkills | json).includes(s) ? '✓ Matched' : '✕ Missing' }}
+              </span>
+              <span class="pill-label">{{ s }}</span>
+            </div>
+            <div *ngIf="!result.preferredSkills || result.preferredSkills.length === 0" class="empty-state-text">
+              No specific preferred skills extracted.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Matched Skills Full List -->
+      <div class="card-glass mt-20">
+        <div class="box-header">
+          <div class="box-title text-success">
+            <span>✅</span> Verified Matched Skills ({{ result.matchedSkills?.length || 0 }})
+          </div>
+          <span class="badge-count green">{{ result.matchedSkills?.length || 0 }} present in resume</span>
+        </div>
+        <p class="box-desc">These skills are confirmed to be present in your resume and align with the target role.</p>
+
+        <div class="matched-grid">
+          <div *ngFor="let m of result.matchedSkills" class="matched-card">
+            <div class="matched-top">
+              <span class="matched-name">{{ m.name }}</span>
+              <span class="badge-type" [ngClass]="getTypeBadgeClass(m.type)">{{ m.type }}</span>
+            </div>
+            <div class="matched-cat">📂 {{ m.category }}</div>
+            <div class="matched-context" *ngIf="m.context">💡 {{ m.context }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT 2: PRIORITY GAPS -->
+    <div class="tab-panel" *ngIf="activeTab === 'priority'">
+      <!-- Filter Toolbar -->
+      <div class="filter-toolbar card-glass">
+        <div class="filter-group">
+          <span class="filter-label">Filter by Priority:</span>
+          <button class="filter-chip" [class.active]="priorityFilter === 'ALL'" (click)="priorityFilter = 'ALL'">
+            All ({{ result.missingSkills?.length || 0 }})
+          </button>
+          <button class="filter-chip chip-high" [class.active]="priorityFilter === 'HIGH'" (click)="priorityFilter = 'HIGH'">
+            🔴 High ({{ result.highPriorityCount }})
+          </button>
+          <button class="filter-chip chip-med" [class.active]="priorityFilter === 'MEDIUM'" (click)="priorityFilter = 'MEDIUM'">
+            🟡 Medium ({{ result.mediumPriorityCount }})
+          </button>
+          <button class="filter-chip chip-low" [class.active]="priorityFilter === 'LOW'" (click)="priorityFilter = 'LOW'">
+            🔵 Low ({{ result.lowPriorityCount }})
+          </button>
+        </div>
+
+        <div class="search-box">
+          <input
+            type="text"
+            class="search-input"
+            [(ngModel)]="searchTerm"
+            placeholder="Search missing skills or categories...">
+        </div>
+      </div>
+
+      <!-- Priority Cards List -->
+      <div class="gaps-list">
+        <div *ngFor="let gap of filteredMissingSkills" class="gap-card card-glass"
+             [class.border-high]="gap.priority === 'HIGH'"
+             [class.border-med]="gap.priority === 'MEDIUM'"
+             [class.border-low]="gap.priority === 'LOW'">
+          <div class="gap-card-header">
+            <div class="gap-title-group">
+              <span class="gap-skill-name">{{ gap.name }}</span>
+              <span class="badge-priority" [ngClass]="getPriorityBadgeClass(gap.priority)">
+                {{ gap.priority }} PRIORITY
+              </span>
+              <span class="badge-type" [ngClass]="getTypeBadgeClass(gap.type)">
+                {{ gap.type }}
+              </span>
+            </div>
+            <div class="gap-category">
+              📁 {{ gap.category }}
+            </div>
+          </div>
+
+          <div class="gap-reason">
+            <strong>Why it matters:</strong> {{ gap.reason }}
+          </div>
+        </div>
+
+        <div *ngIf="filteredMissingSkills.length === 0" class="empty-state-box card-glass">
+          🎉 No missing skills found matching your filter criteria!
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT 3: AI PERSONALIZED RECOMMENDATIONS -->
+    <div class="tab-panel" *ngIf="activeTab === 'recommendations'">
+      <div class="card-glass recommendations-container">
+        <div class="box-header">
+          <div class="box-title">
+            <span>🤖</span> Gemini AI Personalized Career Recommendations
+          </div>
+          <span class="badge-count accent">Tailored Strategy</span>
+        </div>
+        <p class="box-desc">
+          Strategic action plan to overcome your specific skill gaps and optimize your resume for this position.
+        </p>
+
+        <div class="recommendations-stack">
+          <div *ngFor="let rec of result.personalizedRecommendations; let i = index" class="rec-item">
+            <div class="rec-index">{{ i + 1 }}</div>
+            <div class="rec-content">
+              {{ rec }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT 4: LEARNING RESOURCES & PRACTICE PROJECTS -->
+    <div class="tab-panel" *ngIf="activeTab === 'learning'">
+      <div class="learning-paths-container">
+        <div class="section-intro">
+          <h3 class="section-heading">🎯 Skill Roadmap & Practical Project Suggestions</h3>
+          <p class="section-subtext">
+            Bridge your missing skills through targeted, hands-on learning resources and portfolio projects you can build and showcase on your resume.
+          </p>
+        </div>
+
+        <div *ngFor="let lp of result.learningPaths" class="learning-path-card card-glass">
+          <!-- Skill Header -->
+          <div class="lp-header">
+            <div class="lp-title-wrap">
+              <span class="lp-skill-name">{{ lp.skill }}</span>
+              <span class="badge-priority" [ngClass]="getPriorityBadgeClass(lp.priority)">
+                {{ lp.priority }} PRIORITY
+              </span>
+            </div>
+            <div class="lp-time-estimate">
+              ⏱️ Est. Study Time: <strong>{{ lp.estimatedTime || '1-2 weeks' }}</strong>
+            </div>
+          </div>
+
+          <!-- Resources & Projects Two-column -->
+          <div class="lp-content-grid">
+            <!-- Learning Resources Column -->
+            <div class="lp-col">
+              <div class="col-header">
+                📚 Curated Learning Resources
+              </div>
+              <div class="resource-cards-list">
+                <div *ngFor="let res of lp.resources" class="resource-card">
+                  <div class="res-meta-row">
+                    <span class="res-type-badge">{{ res.type }}</span>
+                    <span class="res-platform">{{ res.platform }}</span>
+                  </div>
+                  <div class="res-title">{{ res.title }}</div>
+                  <div class="res-desc">{{ res.description }}</div>
+                  <a *ngIf="res.url" [href]="res.url" target="_blank" rel="noopener noreferrer" class="res-link">
+                    Open Official Resource ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Practice Projects Column -->
+            <div class="lp-col">
+              <div class="col-header">
+                🛠️ Hands-on Practice Projects
+              </div>
+              <div class="project-cards-list">
+                <div *ngFor="let proj of lp.practiceProjects" class="project-card">
+                  <div class="proj-header-row">
+                    <span class="proj-title">{{ proj.title }}</span>
+                    <span class="proj-diff-badge">{{ proj.difficulty }}</span>
+                  </div>
+                  <p class="proj-desc">{{ proj.description }}</p>
+
+                  <div class="deliverables-wrap" *ngIf="proj.keyDeliverables?.length">
+                    <div class="deliverables-label">Key Deliverables to build:</div>
+                    <ul class="deliverables-list">
+                      <li *ngFor="let del of proj.keyDeliverables">
+                        <span class="check-icon">✓</span> {{ del }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!result.learningPaths || result.learningPaths.length === 0" class="empty-state-box card-glass">
+          No learning paths required! Your resume meets all specified qualifications.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT 5: EXTRACTED RESUME SKILLS -->
+    <div class="tab-panel" *ngIf="activeTab === 'resumeSkills'">
+      <div class="card-glass">
+        <div class="box-header">
+          <div class="box-title">
+            <span>📄</span> All Skills Extracted from Your Resume
+          </div>
+          <span class="badge-count">{{ result.resumeSkills?.length || 0 }} total</span>
+        </div>
+        <p class="box-desc">
+          These technical tools, technologies, and keywords were detected from your uploaded PDF resume.
+        </p>
+
+        <div class="chips-cloud">
+          <span *ngFor="let s of result.resumeSkills" class="resume-skill-chip">
+            {{ s }}
+          </span>
+          <div *ngIf="!result.resumeSkills || result.resumeSkills.length === 0" class="empty-state-text">
+            No technical skills were parsed from this resume.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Actions -->
+    <div class="bottom-actions">
+      <button class="btn-primary" (click)="resetForm()">
+        🔄 Analyze Another Resume or Role
+      </button>
+    </div>
+
+  </div>
+</div>
